@@ -1,0 +1,22 @@
+[package]
+name = "luminance-sdl2"
+version = "0.1.0"
+authors = ["Luuk van Oijen <lazyluuk.channel@gmail.com>"]
+edition = "2018"
+license = "..."
+description = "TBD"
+homepage = "TBD"
+documentation = "TBD"
+repository = "TBD"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+gl = "0.14"
+# beryllium = "0.2.1"
+sdl2 = "0.33"
+# luminance = "0.38"
+luminance = { git = "https://github.com/Lucky4Luuk/luminance-rs" }
+# luminance-windowing = "0.8"
+luminance-windowing = { git = "https://github.com/Lucky4Luuk/luminance-rs" }
+log = "0.4"
