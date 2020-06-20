@@ -39,7 +39,7 @@ impl Camera {
             shutter_speed: 1.0 / 100.0,
             iso: 100.0,
 
-            position: Vector3::new(5.0, 5.0, 2.0),
+            position: Vector3::new(5.0, 5.0, 6.0),
             rotation: Rotation3::<f32>::from_angle_y(Deg(0.0)), //Rotation3::<f32>::from_angle_y(Rad(3.14 / 2.0))
         }
     }
