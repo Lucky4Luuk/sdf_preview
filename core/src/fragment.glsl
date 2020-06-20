@@ -25,7 +25,7 @@ uniform sampler3D depth_tex;
 
 float getDistance(vec3 position) {
     return texture(depth_tex, position / SCENE_SCALE).x * SCENE_SCALE;
-    // return length(position - vec3(0.0, 0.0, -2.0)) - 0.5;
+    // return length(position - vec3(5.0)) - 0.5;
 }
 
 vec3 castRay(vec3 origin, vec3 direction) {

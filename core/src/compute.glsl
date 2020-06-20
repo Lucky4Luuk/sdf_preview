@@ -38,7 +38,7 @@ void main() {
     vec3 world_pos = pixel_coords;
 
     float mat_id = 0.0;
-    float dist = sdSphere(world_pos - vec3(5.0, 5.0, 5.0), 0.5) / SCENE_SCALE;
+    float dist = sdSphere(world_pos - vec3(6.0), 5.0) / SCENE_SCALE;
     // float dist = sdPlane(world_pos - vec3(0.0, 1.0, 0.0)) / SCENE_SCALE;
 
     vec2 pixel_data = vec2(dist, mat_id);
