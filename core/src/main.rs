@@ -40,7 +40,7 @@ fn main() {
 
     let renderer = imgui_opengl_renderer::Renderer::new(&mut imgui, |s| surface.video.gl_get_proc_address(s) as *const c_void);
     let mut camera = render::camera::Camera::default();
-    camera.position.y = 0.5;
+    // camera.position.y = 0.5;
 
     let mut event_pump = surface.sdl.event_pump().expect("Failed to get event pump!");
 
@@ -112,7 +112,8 @@ fn main() {
                     unsafe {
                         gl.use_program(Some(handle.handle()));
 
-                        // gl.uniform_1_i32(gl.get_uniform_location(handle.handle(), "depth_tex"), 0);
+                        let loc = gl.get_uniform_location(handle.handle(), "depth_tex");
+                        gl.uniform_1_i32(loc, 0);
 
                         // gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::READ_WRITE, gl::RGBA32F);
                         gl.active_texture(glow::TEXTURE0);

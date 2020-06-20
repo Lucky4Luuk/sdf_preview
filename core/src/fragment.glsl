@@ -1,5 +1,3 @@
-#version 450
-
 out vec3 frag_color;
 
 in vec3 origin;
@@ -7,6 +5,8 @@ in vec3 ray;
 
 #define MAX_STEPS 128
 #define SCENE_SCALE 64
+
+#define DIST_MULT 1.0
 
 struct Material {
     vec3 albedo;
@@ -24,7 +24,8 @@ struct RaycastHit {
 uniform sampler3D depth_tex;
 
 float getDistance(vec3 position) {
-    return texture(depth_tex, position / SCENE_SCALE).x;
+    return texture(depth_tex, position / SCENE_SCALE).x * SCENE_SCALE;
+    // return length(position - vec3(0.0, 0.0, -2.0)) - 0.5;
 }
 
 vec3 castRay(vec3 origin, vec3 direction) {
@@ -38,11 +39,11 @@ vec3 castRay(vec3 origin, vec3 direction) {
     for (int i=0; i<MAX_STEPS; i++) {
         if (t>=tmax) { break; }
         float dist = getDistance(origin + direction * t);
-        if (abs(dist) < 0.001 * t) {
-            result = vec3(dist);
+        if (abs(dist) < 0.01 * t) {
+            result = vec3(1.0, t / SCENE_SCALE, 0.0);
             break;
         }
-        t += dist;
+        t += dist * DIST_MULT;
     }
 
     return result;
@@ -52,6 +53,6 @@ void main() {
     vec3 rayDir = normalize(ray);
 
     frag_color = castRay(origin, rayDir);
-    float dist = texture(depth_tex, vec3(0.0)).x;
-    frag_color = vec3(dist);
+    // vec3 dist = texture(depth_tex, vec3(0.0)).xyz;
+    // frag_color = dist;
 }
