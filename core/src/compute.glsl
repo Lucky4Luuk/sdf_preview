@@ -1,4 +1,4 @@
-#version 430
+#version 450
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image3D img_output;
@@ -43,7 +43,8 @@ void main() {
 
     vec2 pixel_data = vec2(dist, mat_id);
     // vec4 pixel = vec4(pixel_data, pixel_data);
-    vec4 pixel = vec4(1.0, vec2(0.0), 1.0);
+    // vec4 pixel = vec4(1.0, vec2(0.0), 1.0);
+    vec4 pixel = vec4(1.0);
 
     imageStore(img_output, pixel_coords, pixel);
 }

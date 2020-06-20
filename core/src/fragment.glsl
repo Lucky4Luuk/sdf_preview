@@ -1,3 +1,5 @@
+#version 450
+
 out vec3 frag_color;
 
 in vec3 origin;

@@ -65,18 +65,22 @@ fn main() {
     let work_group_invoc = render::get_workgroup_invocations(&gl);
     debug!("Max local work group invocations: {}", work_group_invoc);
 
+    unsafe {
+        // gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::WRITE_ONLY, gl::RGBA32F);
+        gl.use_program(Some(depth_shader));
+        gl.active_texture(glow::TEXTURE0);
+        gl.bind_texture(glow::TEXTURE_3D, Some(scene_tex));
+        gl.uniform_1_i32(gl.get_uniform_location(depth_shader, "img_output"), 0);
+        gl.dispatch_compute(64, 64, 64);
+        gl::MemoryBarrier(gl::SHADER_IMAGE_ACCESS_BARRIER_BIT);
+        // gl.use_program(None);
+        // gl.bind_texture(glow::TEXTURE_3D, None);
+    }
+
     'main: loop {
         let back_buffer = surface.back_buffer().expect("Couldn't get the back buffer!");
 
-        unsafe {
-            // gl.bind_texture(glow::TEXTURE_3D, Some(scene_tex));
-            gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::READ_WRITE, gl::RGBA32F);
-            gl.use_program(Some(depth_shader));
-            gl.dispatch_compute(64, 64, 64);
-            gl::MemoryBarrier(gl::SHADER_IMAGE_ACCESS_BARRIER_BIT);
-            // gl.use_program(None);
-            // gl.bind_texture(glow::TEXTURE_3D, None);
-        }
+        //beep
 
         for event in event_pump.poll_iter() {
             imgui_sdl2.handle_event(&mut imgui, &event);
@@ -108,7 +112,11 @@ fn main() {
                     unsafe {
                         gl.use_program(Some(handle.handle()));
 
-                        gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::READ_WRITE, gl::RGBA32F);
+                        // gl.uniform_1_i32(gl.get_uniform_location(handle.handle(), "depth_tex"), 0);
+
+                        // gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::READ_WRITE, gl::RGBA32F);
+                        gl.active_texture(glow::TEXTURE0);
+                        gl.bind_texture(glow::TEXTURE_3D, Some(scene_tex));
                     }
 
                     iface.inv_projection_view.update(inv_projview_matrix.into());
