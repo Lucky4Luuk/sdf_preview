@@ -45,9 +45,6 @@ pub fn initialize(gl: &glow::Context) {
 }
 
 pub fn get_3d_texture(gl: &glow::Context, w: i32, h: i32, d: i32) -> <glow::Context as glow::HasContext>::Texture {
-    // let random_data: [u8; 64*64*64*4] = [1; 64*64*64*4];
-    let random_data: Vec<u8> = vec![0; 64*64*64*4];
-
     unsafe {
         let gl_texture = gl.create_texture().expect("Failed to create texture!");
         // let mut gl_texture = 0;
@@ -55,7 +52,7 @@ pub fn get_3d_texture(gl: &glow::Context, w: i32, h: i32, d: i32) -> <glow::Cont
         // gl::ActiveTexture(gl::TEXTURE0);
         gl::BindTexture(gl::TEXTURE_3D, gl_texture);
 
-        gl.tex_image_3d(glow::TEXTURE_3D, 0, glow::RGBA32F as i32, w, h, d, 0, glow::RGBA, glow::UNSIGNED_BYTE, Some(&random_data));
+        gl.tex_image_3d(glow::TEXTURE_3D, 0, glow::RGBA32F as i32, w, h, d, 0, glow::RGBA, glow::UNSIGNED_BYTE, None);
 
         gl.tex_parameter_i32(glow::TEXTURE_3D, glow::TEXTURE_MIN_FILTER, glow::LINEAR as i32);
         gl.tex_parameter_i32(glow::TEXTURE_3D, glow::TEXTURE_MAG_FILTER, glow::LINEAR as i32);

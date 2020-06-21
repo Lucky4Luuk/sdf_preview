@@ -3,7 +3,7 @@
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image3D img_output;
 
-#define SCENE_SCALE 64
+#define SCENE_SCALE 128
 
 // struct Sphere {
 //     vec3 position;
@@ -38,8 +38,8 @@ void main() {
     vec3 world_pos = pixel_coords;
 
     float mat_id = 0.0;
-    float dist = sdSphere(world_pos - vec3(6.0), 5.0) / SCENE_SCALE;
-    // float dist = sdPlane(world_pos - vec3(0.0, 1.0, 0.0)) / SCENE_SCALE;
+    float dist = sdSphere(world_pos - vec3(6.0), 4.0) / SCENE_SCALE;
+    dist = min(dist, sdPlane(world_pos - vec3(0.0, 1.0, 0.0)) / SCENE_SCALE);
 
     vec2 pixel_data = vec2(dist, mat_id);
     vec4 pixel = vec4(pixel_data, pixel_data);

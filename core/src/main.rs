@@ -53,7 +53,9 @@ fn main() {
     let program = render::get_program(include_str!("vertex.glsl"), include_str!("fragment.glsl"));
     let render_state = RenderState::default();
 
-    let scene_tex = render::get_3d_texture(&gl, 64, 64, 64);
+    let st_now = Instant::now();
+    let scene_tex = render::get_3d_texture(&gl, 128, 128, 128);
+    debug!("Creating 3d texture took {} ms", (Instant::now() - st_now).as_millis());
     let depth_shader = render::get_compute_program(&gl, include_str!("compute.glsl"));
 
     debug!("Setup complete!");
@@ -65,22 +67,36 @@ fn main() {
     let work_group_invoc = render::get_workgroup_invocations(&gl);
     debug!("Max local work group invocations: {}", work_group_invoc);
 
+    let st_fill_now = Instant::now();
     unsafe {
         // gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::WRITE_ONLY, gl::RGBA32F);
         gl.use_program(Some(depth_shader));
         gl.active_texture(glow::TEXTURE0);
         gl.bind_texture(glow::TEXTURE_3D, Some(scene_tex));
         gl.uniform_1_i32(gl.get_uniform_location(depth_shader, "img_output"), 0);
-        gl.dispatch_compute(64, 64, 64);
+        gl.dispatch_compute(128, 128, 128);
         gl::MemoryBarrier(gl::SHADER_IMAGE_ACCESS_BARRIER_BIT);
         // gl.use_program(None);
         // gl.bind_texture(glow::TEXTURE_3D, None);
     }
+    debug!("Filling 3d texture took {} ms", (Instant::now() - st_fill_now).as_millis());
 
     'main: loop {
         let back_buffer = surface.back_buffer().expect("Couldn't get the back buffer!");
 
         //beep
+        //Cuts fps in half on laptop, but laptop gets waaaay worse performance than my pc :)
+        // unsafe {
+        //     // gl::BindImageTexture(0, scene_tex, 0, gl::TRUE, 0, gl::WRITE_ONLY, gl::RGBA32F);
+        //     gl.use_program(Some(depth_shader));
+        //     gl.active_texture(glow::TEXTURE0);
+        //     gl.bind_texture(glow::TEXTURE_3D, Some(scene_tex));
+        //     gl.uniform_1_i32(gl.get_uniform_location(depth_shader, "img_output"), 0);
+        //     gl.dispatch_compute(128, 128, 128);
+        //     gl::MemoryBarrier(gl::SHADER_IMAGE_ACCESS_BARRIER_BIT);
+        //     // gl.use_program(None);
+        //     // gl.bind_texture(glow::TEXTURE_3D, None);
+        // }
 
         for event in event_pump.poll_iter() {
             imgui_sdl2.handle_event(&mut imgui, &event);
