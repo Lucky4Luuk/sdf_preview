@@ -1,9 +1,13 @@
 #version 450
 
-layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+//My gtx1080 allows only for a maximum of 1536 local invocations
+//so we are kind of limited here, but this is more for speedup than anything.
+//Bigger local invocation groups could help however with keeping the
+//work group counts low, which also have a limit, but that limit is way higher.
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
 layout(rgba32f, binding = 0) uniform image3D img_output;
 
-#define SCENE_SCALE 128
+#define SCENE_SCALE 512
 
 // struct Sphere {
 //     vec3 position;
@@ -33,18 +37,15 @@ float sdPlane(vec3 p) {
 
 void main() {
     ivec3 pixel_coords = ivec3(gl_GlobalInvocationID.xyz);
-    // vec4 pixel = vec4(pixel_coords, 1.0);
-
     vec3 world_pos = pixel_coords;
 
     float mat_id = 0.0;
-    float dist = sdSphere(world_pos - vec3(6.0), 4.0) / SCENE_SCALE;
+    float dist = sdSphere(world_pos - vec3(128.0, 32.0, 128.0), 16.0) / SCENE_SCALE;
+    dist = min(dist, sdSphere(world_pos - vec3(128.0, 32.0, 32.0), 16.0) / SCENE_SCALE);
     dist = min(dist, sdPlane(world_pos - vec3(0.0, 1.0, 0.0)) / SCENE_SCALE);
 
     vec2 pixel_data = vec2(dist, mat_id);
     vec4 pixel = vec4(pixel_data, pixel_data);
-    // vec4 pixel = vec4(1.0, vec2(0.0), 1.0);
-    // vec4 pixel = vec4(1.0);
 
     imageStore(img_output, pixel_coords, pixel);
 }

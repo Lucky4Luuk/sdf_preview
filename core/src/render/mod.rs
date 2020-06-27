@@ -52,7 +52,7 @@ pub fn get_3d_texture(gl: &glow::Context, w: i32, h: i32, d: i32) -> <glow::Cont
         // gl::ActiveTexture(gl::TEXTURE0);
         gl::BindTexture(gl::TEXTURE_3D, gl_texture);
 
-        gl.tex_image_3d(glow::TEXTURE_3D, 0, glow::RGBA32F as i32, w, h, d, 0, glow::RGBA, glow::UNSIGNED_BYTE, None);
+        gl.tex_image_3d(glow::TEXTURE_3D, 0, glow::RGBA32F as i32, w, h, d, 0, glow::RGBA, glow::FLOAT, None);
 
         gl.tex_parameter_i32(glow::TEXTURE_3D, glow::TEXTURE_MIN_FILTER, glow::LINEAR as i32);
         gl.tex_parameter_i32(glow::TEXTURE_3D, glow::TEXTURE_MAG_FILTER, glow::LINEAR as i32);
