@@ -269,7 +269,7 @@ fn open_window(width: u32, height: u32) -> Result<(luminance_sdl2::SDL2Surface, 
     match surface {
         Err(e) => {
             error!("Couldn't initialize photic!\n{}", e);
-            return Err("Couldn't initialize photic!")
+            return Err("Couldn't initialize photic!");
         },
         Ok(surface) => {
             let gl_context = surface.window.gl_create_context().expect("Couldn't create GL context");
